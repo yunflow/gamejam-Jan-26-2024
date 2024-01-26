@@ -122,13 +122,3 @@ public class TimelineManager : MonoBehaviour
         }
     }
 }
-
-public enum Action
-{
-    Idle,
-    Speak,
-    Up,
-    Drink,
-    Down,
-    Angry
-}
