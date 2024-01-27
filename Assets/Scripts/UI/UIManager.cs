@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,15 @@ namespace UI
 {
     public class UIManager : MonoBehaviour
     {
+        [Header("Energy Bar")]
         [SerializeField] private Image progressBar;
+
+        [Header("Bubble")]
+        [SerializeField] private Animator bubbleAni; 
+        [SerializeField] private Image thirdBubble; 
+        [SerializeField] private Sprite hahaReactBubble; 
+        [SerializeField] private Sprite yeaReactBubble; 
+
         private TimelineManager tlm;
 
         private void Start()
@@ -16,6 +25,10 @@ namespace UI
         private void Update()
         {
             UpdateProgressBar();
+
+            if (Input.GetKeyDown(KeyCode.F)) {
+                ShowReactBubble();
+            }
         }
 
         private void UpdateProgressBar()
@@ -30,5 +43,16 @@ namespace UI
             }
             
         }
+
+        private void ShowReactBubble() {
+            if (tlm.playerReactNumber == 0) {
+                thirdBubble.sprite = hahaReactBubble;
+            } else {
+                thirdBubble.sprite = yeaReactBubble;
+            }
+
+            bubbleAni.SetTrigger("ShowBubble");
+        }
+
     }
 }
