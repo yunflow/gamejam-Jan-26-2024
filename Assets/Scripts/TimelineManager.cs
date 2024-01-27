@@ -1,13 +1,19 @@
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TimelineManager : MonoBehaviour
 {
     [SerializeField] private ActionSetSO[] actionSets;
     [SerializeField] private Animator professorAnimator;
 
-    public int points;
+    // public interface
+    public float points;
     public int playerReactNumber; // 0-Hahaha, 1-yeeeaa
+    public bool isHahaPressed;
+    public bool isYeePressed;
+
+    // private
     private int currentSetIndex;
 
     private bool inSetProcess;
@@ -44,6 +50,8 @@ public class TimelineManager : MonoBehaviour
         inSetProcess = true;
         isSpacePressedDuringUp = false;
 
+        SetRandomReactNumber();
+
         Vector2[] actions = actionSet.actions;
 
         foreach (Vector2 action in actions)
@@ -57,7 +65,7 @@ public class TimelineManager : MonoBehaviour
                 float speakTime = 0;
                 while (speakTime < action.y)
                 {
-                    if (Input.GetKey(KeyCode.Space))
+                    if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Y))
                     {
                         points--;
                         print("the professor is angry! point: " + points);
@@ -176,6 +184,21 @@ public class TimelineManager : MonoBehaviour
                 print("animation: Professor Angry");
                 professorAnimator.Play("Tutor Angry");
                 break;
+        }
+    }
+
+    private void SetRandomReactNumber()
+    {
+        // Set Random React number [0, 1]
+        playerReactNumber = Random.Range(0, 2);
+
+        if (playerReactNumber == 0)
+        {
+            print("Should Hahahah");
+        }
+        else if (playerReactNumber == 1)
+        {
+            print("Should Yeeee");
         }
     }
 }

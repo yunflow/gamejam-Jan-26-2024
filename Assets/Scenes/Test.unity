@@ -1352,14 +1352,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1842652562}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 463a4f9d706f546e197e9e45df711cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   progressBar: {fileID: 0}
-  progressBarImage: {fileID: 583621148}
-  testHealth: 3
 --- !u!1 &1942699465
 GameObject:
   m_ObjectHideFlags: 0
