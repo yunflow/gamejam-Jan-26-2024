@@ -7,9 +7,22 @@ public class TimelineManager : MonoBehaviour
     [SerializeField] private ActionSetSO[] actionSets;
     [SerializeField] private Animator professorAnimator;
     [SerializeField] private Animator studentAnimator;
+    [SerializeField] private ParticleSystem talkingVFX;
+
+    [Header("Tutorial GameObjects")] 
+    [SerializeField] private GameObject backgroundIntro;
+    [SerializeField] private GameObject ruleIntro;
+    [SerializeField] private GameObject spaceKeyIntro;
+    [SerializeField] private GameObject holdPressIntro; // drink
+    [SerializeField] private GameObject releaseIntro; // 放下杯子
+    
+    [SerializeField] private GameObject successIntro;
+    [SerializeField] private GameObject failIntro;
+
+    [SerializeField] private GameObject yKeyIntro;
 
     // public interface
-    public float points;
+    [Header("public debug")] public float points;
     public int playerReactNumber; // 0-Hahaha, 1-yeeeaa
     public bool isHahaPressed;
     public bool isYeePressed;
@@ -66,6 +79,7 @@ public class TimelineManager : MonoBehaviour
             if ((Action)action.x == Action.Speak)
             {
                 PerformTutorAction(Action.Speak);
+                talkingVFX.Play();
 
                 float speakTime = 0;
                 while (speakTime < action.y)
@@ -92,6 +106,7 @@ public class TimelineManager : MonoBehaviour
             {
                 professorAnimator.speed = 1.0f / action.y;
                 PerformTutorAction(Action.Up);
+                talkingVFX.Stop();
 
                 float upTime = 0;
                 while (upTime < action.y)
@@ -152,6 +167,7 @@ public class TimelineManager : MonoBehaviour
             else if ((Action)action.x == Action.Drink)
             {
                 PerformTutorAction(Action.Drink);
+                talkingVFX.Stop();
 
                 float drinkTime = 0;
                 while (drinkTime < action.y)
@@ -211,6 +227,7 @@ public class TimelineManager : MonoBehaviour
             {
                 professorAnimator.speed = 1.0f / action.y;
                 PerformTutorAction(Action.Down);
+                talkingVFX.Stop();
 
                 float downTime = 0;
                 while (downTime < action.y)
@@ -248,6 +265,7 @@ public class TimelineManager : MonoBehaviour
             }
             else
             {
+                talkingVFX.Stop();
                 PerformTutorAction((Action)action.x);
                 yield return new WaitForSeconds(action.y);
             }
@@ -287,6 +305,7 @@ public class TimelineManager : MonoBehaviour
                 studentAnimator.speed = 0.5f;
                 isStudentAk = true;
                 professorAnimator.Play("Tutor_angry");
+                talkingVFX.Stop();
                 studentAnimator.Play("student_ak");
                 break;
         }
