@@ -7,23 +7,49 @@ public class TimelineManager : MonoBehaviour
     [SerializeField] private Animator professorAnimator;
 
     public int points;
-    public bool isSpacePressedDuringUp;
+    public int playerReactNumber; // 0-Hahaha, 1-yeeeaa
+    private int currentSetIndex;
+
+    private bool inSetProcess;
+    private bool isOneLevelOver;
+    private bool isSpacePressedDuringUp;
 
 
     private void Start()
     {
+        currentSetIndex = 0;
         points = 3;
-        StartCoroutine(PerformActionSet(actionSets[0]));
+        StartCoroutine(PerformActionSet(actionSets[currentSetIndex]));
+    }
+
+    private void Update()
+    {
+        if (inSetProcess || isOneLevelOver) return;
+
+        currentSetIndex++;
+        if (currentSetIndex > actionSets.Length - 1)
+        {
+            print("**** All Sets finish ****");
+            PerformAction(Action.Idle);
+            isOneLevelOver = true;
+            return;
+        }
+
+        StartCoroutine(PerformActionSet(actionSets[currentSetIndex]));
     }
 
     private IEnumerator PerformActionSet(ActionSetSO actionSet)
     {
-        print("!!!! Start A New Set !!!!");
+        print("**** Start A New Set: " + (currentSetIndex + 1) + "****");
+        inSetProcess = true;
+        isSpacePressedDuringUp = false;
 
         Vector2[] actions = actionSet.actions;
 
         foreach (Vector2 action in actions)
         {
+            professorAnimator.speed = 1; // Reset the Animator speed every action
+
             if ((Action)action.x == Action.Speak)
             {
                 PerformAction(Action.Speak);
@@ -39,7 +65,8 @@ public class TimelineManager : MonoBehaviour
                         PerformAction(Action.Angry);
                         yield return new WaitForSeconds(3f);
 
-                        print("!!!! Finish One Set But Fail !!!!");
+                        print("**** Finish One Set But Fail ****");
+                        inSetProcess = false;
                         yield break;
                     }
 
@@ -49,6 +76,7 @@ public class TimelineManager : MonoBehaviour
             }
             else if ((Action)action.x == Action.Up)
             {
+                professorAnimator.speed = 0.67f / action.y;
                 PerformAction(Action.Up);
 
                 float upTime = 0;
@@ -81,7 +109,8 @@ public class TimelineManager : MonoBehaviour
                         PerformAction(Action.Angry);
                         yield return new WaitForSeconds(3f);
 
-                        print("!!!! Finish One Set But Fail !!!!");
+                        print("**** Finish One Set But Fail ****");
+                        inSetProcess = false;
                         yield break;
                     }
 
@@ -91,6 +120,7 @@ public class TimelineManager : MonoBehaviour
             }
             else if ((Action)action.x == Action.Down)
             {
+                professorAnimator.speed = 0.625f / action.y;
                 PerformAction(Action.Down);
 
                 float downTime = 0;
@@ -99,7 +129,7 @@ public class TimelineManager : MonoBehaviour
                     if (isSpacePressedDuringUp && !Input.GetKey(KeyCode.Space))
                     {
                         // Successful action
-                        Debug.Log("Success laugh");
+                        Debug.Log("**** Professor Not Angry ****");
                         isSpacePressedDuringUp = false; // Reset the flag
                     }
 
@@ -114,7 +144,8 @@ public class TimelineManager : MonoBehaviour
             }
         }
 
-        print("!!!! Finish One Set!!!!");
+        print("**** Finish One Set ****");
+        inSetProcess = false;
     }
 
     private void PerformAction(Action action)
@@ -123,21 +154,27 @@ public class TimelineManager : MonoBehaviour
         {
             case Action.Idle:
                 print("animation: Professor Idle");
+                professorAnimator.Play("Tutor Idle");
                 break;
             case Action.Speak:
                 print("animation: Professor Speak");
+                professorAnimator.Play("Tutor Speak");
                 break;
             case Action.Up:
                 print("animation: Professor Up");
+                professorAnimator.Play("Tutor Up");
                 break;
             case Action.Drink:
                 print("animation: Professor Drink");
+                professorAnimator.Play("Tutor Drink");
                 break;
             case Action.Down:
                 print("animation: Professor Down");
+                professorAnimator.Play("Tutor Down");
                 break;
             case Action.Angry:
                 print("animation: Professor Angry");
+                professorAnimator.Play("Tutor Angry");
                 break;
         }
     }
