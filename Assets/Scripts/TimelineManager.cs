@@ -4,97 +4,117 @@ using UnityEngine;
 public class TimelineManager : MonoBehaviour
 {
     [SerializeField] private ActionSetSO[] actionSets;
+    [SerializeField] private Animator professorAnimator;
 
-    private int points;
+    public int points;
     public bool isSpacePressedDuringUp;
 
 
     private void Start()
     {
+        points = 3;
         StartCoroutine(PerformActionSet(actionSets[0]));
-    }
-
-    private void Update()
-    {
     }
 
     private IEnumerator PerformActionSet(ActionSetSO actionSet)
     {
+        print("!!!! Start A New Set !!!!");
+
         Vector2[] actions = actionSet.actions;
 
         foreach (Vector2 action in actions)
         {
-            switch ((Action)action.x)
+            if ((Action)action.x == Action.Speak)
             {
-                case Action.Speak:
+                PerformAction(Action.Speak);
+
+                float speakTime = 0;
+                while (speakTime < action.y)
                 {
-                    PerformAction(Action.Speak);
-
-                    float speakTime = 0;
-                    while (speakTime < action.y)
+                    if (Input.GetKey(KeyCode.Space))
                     {
-                        if (Input.GetKey(KeyCode.Space))
-                        {
-                            PerformAction(Action.Angry);
+                        points--;
+                        print("the professor is angry! point: " + points);
 
-                            yield return new WaitForSeconds(3f); // Angry animation
-                            print("Finish one set but Fail");
-                            yield break;
-                        }
+                        PerformAction(Action.Angry);
+                        yield return new WaitForSeconds(3f);
 
-                        speakTime += Time.deltaTime;
-                        yield return null;
+                        print("!!!! Finish One Set But Fail !!!!");
+                        yield break;
                     }
 
-                    break;
+                    speakTime += Time.deltaTime;
+                    yield return null;
                 }
-                case Action.Up:
+            }
+            else if ((Action)action.x == Action.Up)
+            {
+                PerformAction(Action.Up);
+
+                float upTime = 0;
+                while (upTime < action.y)
                 {
-                    PerformAction(Action.Up);
-
-                    float upTime = 0;
-                    while (upTime < action.y)
+                    if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        if (Input.GetKeyDown(KeyCode.Space))
-                        {
-                            isSpacePressedDuringUp = true;
-                        }
-
-                        upTime += Time.deltaTime;
-                        yield return null;
+                        isSpacePressedDuringUp = true;
                     }
 
-                    break;
+                    upTime += Time.deltaTime;
+                    yield return null;
                 }
-                case Action.Down:
+            }
+            else if ((Action)action.x == Action.Drink)
+            {
+                PerformAction(Action.Drink);
+
+                float drinkTime = 0;
+                while (drinkTime < action.y)
                 {
-                    PerformAction(Action.Down);
-
-                    float downTime = 0;
-                    while (downTime < action.y)
+                    if (!Input.GetKey(KeyCode.Space))
                     {
-                        if (isSpacePressedDuringUp && !Input.GetKey(KeyCode.Space))
-                        {
-                            // Successful action
-                            points++;
-                            Debug.Log("Point earned! Total points: " + points);
-                            isSpacePressedDuringUp = false; // Reset the flag
-                        }
+                        yield return new WaitForSeconds(action.y); // 继续播放Drink动画
+                        isSpacePressedDuringUp = false;
 
-                        downTime += Time.deltaTime;
-                        yield return null;
+                        points--;
+                        print("the professor is angry! point: " + points);
+
+                        PerformAction(Action.Angry);
+                        yield return new WaitForSeconds(3f);
+
+                        print("!!!! Finish One Set But Fail !!!!");
+                        yield break;
                     }
 
-                    break;
+                    drinkTime += Time.deltaTime;
+                    yield return null;
                 }
-                default:
-                    PerformAction((Action)action.x);
-                    yield return new WaitForSeconds(action.y);
-                    break;
+            }
+            else if ((Action)action.x == Action.Down)
+            {
+                PerformAction(Action.Down);
+
+                float downTime = 0;
+                while (downTime < action.y)
+                {
+                    if (isSpacePressedDuringUp && !Input.GetKey(KeyCode.Space))
+                    {
+                        // Successful action
+                        Debug.Log("Success laugh");
+                        isSpacePressedDuringUp = false; // Reset the flag
+                    }
+
+                    downTime += Time.deltaTime;
+                    yield return null;
+                }
+            }
+            else
+            {
+                PerformAction((Action)action.x);
+                yield return new WaitForSeconds(action.y);
             }
         }
 
-        print("Finish one set");
+        print("!!!! Finish One Set!!!!");
     }
 
     private void PerformAction(Action action)
@@ -102,22 +122,22 @@ public class TimelineManager : MonoBehaviour
         switch (action)
         {
             case Action.Idle:
-                print("Idle");
+                print("animation: Professor Idle");
                 break;
             case Action.Speak:
-                print("Speak");
+                print("animation: Professor Speak");
                 break;
             case Action.Up:
-                print("Up");
+                print("animation: Professor Up");
                 break;
             case Action.Drink:
-                print("Drink");
+                print("animation: Professor Drink");
                 break;
             case Action.Down:
-                print("Down");
+                print("animation: Professor Down");
                 break;
             case Action.Angry:
-                print("Angry");
+                print("animation: Professor Angry");
                 break;
         }
     }
