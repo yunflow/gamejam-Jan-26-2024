@@ -6,6 +6,7 @@ public class TimelineManager : MonoBehaviour
 {
     [SerializeField] private ActionSetSO[] actionSets;
     [SerializeField] private Animator professorAnimator;
+    [SerializeField] private Animator studentAnimator;
 
     // public interface
     public float points;
@@ -19,6 +20,7 @@ public class TimelineManager : MonoBehaviour
     private bool inSetProcess;
     private bool isOneLevelOver;
     private bool isSpacePressedDuringUp;
+    private bool isStudentAk;
 
 
     private void Start()
@@ -30,13 +32,15 @@ public class TimelineManager : MonoBehaviour
 
     private void Update()
     {
+        UpdateKey();
+
         if (inSetProcess || isOneLevelOver) return;
 
         currentSetIndex++;
         if (currentSetIndex > actionSets.Length - 1)
         {
             print("**** All Sets finish ****");
-            PerformAction(Action.Idle);
+            PerformTutorAction(Action.Idle);
             isOneLevelOver = true;
             return;
         }
@@ -57,10 +61,11 @@ public class TimelineManager : MonoBehaviour
         foreach (Vector2 action in actions)
         {
             professorAnimator.speed = 1; // Reset the Animator speed every action
+            studentAnimator.speed = 1;
 
             if ((Action)action.x == Action.Speak)
             {
-                PerformAction(Action.Speak);
+                PerformTutorAction(Action.Speak);
 
                 float speakTime = 0;
                 while (speakTime < action.y)
@@ -70,8 +75,9 @@ public class TimelineManager : MonoBehaviour
                         points--;
                         print("the professor is angry! point: " + points);
 
-                        PerformAction(Action.Angry);
-                        yield return new WaitForSeconds(3f);
+                        PerformTutorAction(Action.Angry);
+                        yield return new WaitForSeconds(2f);
+                        isStudentAk = false;
 
                         print("**** Finish One Set But Fail ****");
                         inSetProcess = false;
@@ -84,70 +90,165 @@ public class TimelineManager : MonoBehaviour
             }
             else if ((Action)action.x == Action.Up)
             {
-                professorAnimator.speed = 0.67f / action.y;
-                PerformAction(Action.Up);
+                professorAnimator.speed = 1.0f / action.y;
+                PerformTutorAction(Action.Up);
 
                 float upTime = 0;
                 while (upTime < action.y)
                 {
-                    if (Input.GetKeyDown(KeyCode.Space))
+                    switch (playerReactNumber)
                     {
-                        isSpacePressedDuringUp = true;
-                    }
+                        case 0:
+                        {
+                            if (Input.GetKeyDown(KeyCode.Space))
+                            {
+                                isSpacePressedDuringUp = true;
+                            }
+                            else if (Input.GetKeyDown(KeyCode.Y))
+                            {
+                                points--;
+                                print("the professor is angry! point: " + points);
 
-                    upTime += Time.deltaTime;
-                    yield return null;
+                                PerformTutorAction(Action.Angry);
+                                yield return new WaitForSeconds(2f);
+                                isStudentAk = false;
+
+                                print("**** Finish One Set But Fail ****");
+                                inSetProcess = false;
+                                yield break;
+                            }
+
+                            upTime += Time.deltaTime;
+                            yield return null;
+                        }
+                            break;
+                        case 1:
+                        {
+                            if (Input.GetKeyDown(KeyCode.Y))
+                            {
+                                isSpacePressedDuringUp = true;
+                            }
+                            else if (Input.GetKeyDown(KeyCode.Space))
+                            {
+                                points--;
+                                print("the professor is angry! point: " + points);
+
+                                PerformTutorAction(Action.Angry);
+                                yield return new WaitForSeconds(2f);
+                                isStudentAk = false;
+
+                                print("**** Finish One Set But Fail ****");
+                                inSetProcess = false;
+                                yield break;
+                            }
+
+                            upTime += Time.deltaTime;
+                            yield return null;
+                        }
+                            break;
+                    }
                 }
             }
             else if ((Action)action.x == Action.Drink)
             {
-                PerformAction(Action.Drink);
+                PerformTutorAction(Action.Drink);
 
                 float drinkTime = 0;
                 while (drinkTime < action.y)
                 {
-                    if (!Input.GetKey(KeyCode.Space))
+                    switch (playerReactNumber)
                     {
-                        yield return new WaitForSeconds(action.y); // 继续播放Drink动画
-                        isSpacePressedDuringUp = false;
+                        case 0:
+                        {
+                            if (!Input.GetKey(KeyCode.Space))
+                            {
+                                yield return new WaitForSeconds(action.y); // 继续播放Drink动画
+                                isSpacePressedDuringUp = false;
 
-                        points--;
-                        print("the professor is angry! point: " + points);
+                                points--;
+                                print("the professor is angry! point: " + points);
 
-                        PerformAction(Action.Angry);
-                        yield return new WaitForSeconds(3f);
+                                PerformTutorAction(Action.Angry);
+                                yield return new WaitForSeconds(2f);
+                                isStudentAk = false;
 
-                        print("**** Finish One Set But Fail ****");
-                        inSetProcess = false;
-                        yield break;
+                                print("**** Finish One Set But Fail ****");
+                                inSetProcess = false;
+                                yield break;
+                            }
+
+                            drinkTime += Time.deltaTime;
+                            yield return null;
+                        }
+                            break;
+                        case 1:
+                        {
+                            if (!Input.GetKey(KeyCode.Y))
+                            {
+                                yield return new WaitForSeconds(action.y); // 继续播放Drink动画
+                                isSpacePressedDuringUp = false;
+
+                                points--;
+                                print("the professor is angry! point: " + points);
+
+                                PerformTutorAction(Action.Angry);
+                                yield return new WaitForSeconds(2f);
+                                isStudentAk = false;
+
+                                print("**** Finish One Set But Fail ****");
+                                inSetProcess = false;
+                                yield break;
+                            }
+
+                            drinkTime += Time.deltaTime;
+                            yield return null;
+                        }
+                            break;
                     }
-
-                    drinkTime += Time.deltaTime;
-                    yield return null;
                 }
             }
             else if ((Action)action.x == Action.Down)
             {
-                professorAnimator.speed = 0.625f / action.y;
-                PerformAction(Action.Down);
+                professorAnimator.speed = 1.0f / action.y;
+                PerformTutorAction(Action.Down);
 
                 float downTime = 0;
                 while (downTime < action.y)
                 {
-                    if (isSpacePressedDuringUp && !Input.GetKey(KeyCode.Space))
+                    switch (playerReactNumber)
                     {
-                        // Successful action
-                        Debug.Log("**** Professor Not Angry ****");
-                        isSpacePressedDuringUp = false; // Reset the flag
-                    }
+                        case 0:
+                        {
+                            if (isSpacePressedDuringUp && !Input.GetKey(KeyCode.Space))
+                            {
+                                // Successful action
+                                Debug.Log("**** Professor Not Angry ****");
+                                isSpacePressedDuringUp = false; // Reset the flag
+                            }
 
-                    downTime += Time.deltaTime;
-                    yield return null;
+                            downTime += Time.deltaTime;
+                            yield return null;
+                        }
+                            break;
+                        case 1:
+                        {
+                            if (isSpacePressedDuringUp && !Input.GetKey(KeyCode.Y))
+                            {
+                                // Successful action
+                                Debug.Log("**** Professor Not Angry ****");
+                                isSpacePressedDuringUp = false; // Reset the flag
+                            }
+
+                            downTime += Time.deltaTime;
+                            yield return null;
+                        }
+                            break;
+                    }
                 }
             }
             else
             {
-                PerformAction((Action)action.x);
+                PerformTutorAction((Action)action.x);
                 yield return new WaitForSeconds(action.y);
             }
         }
@@ -156,33 +257,37 @@ public class TimelineManager : MonoBehaviour
         inSetProcess = false;
     }
 
-    private void PerformAction(Action action)
+    private void PerformTutorAction(Action action)
     {
         switch (action)
         {
             case Action.Idle:
                 print("animation: Professor Idle");
-                professorAnimator.Play("Tutor Idle");
+                professorAnimator.Play("Tutor_Idle");
                 break;
             case Action.Speak:
                 print("animation: Professor Speak");
-                professorAnimator.Play("Tutor Speak");
+                professorAnimator.Play("Tutor_Idle_speak");
                 break;
             case Action.Up:
                 print("animation: Professor Up");
-                professorAnimator.Play("Tutor Up");
+                professorAnimator.Play("Tutor_speak_drink");
                 break;
             case Action.Drink:
                 print("animation: Professor Drink");
-                professorAnimator.Play("Tutor Drink");
+                professorAnimator.Play("Tutor_drink");
                 break;
             case Action.Down:
                 print("animation: Professor Down");
-                professorAnimator.Play("Tutor Down");
+                professorAnimator.Play("Tutor_drink_idle");
                 break;
             case Action.Angry:
                 print("animation: Professor Angry");
-                professorAnimator.Play("Tutor Angry");
+                professorAnimator.speed = 0.5f;
+                studentAnimator.speed = 0.5f;
+                isStudentAk = true;
+                professorAnimator.Play("Tutor_angry");
+                studentAnimator.Play("student_ak");
                 break;
         }
     }
@@ -199,6 +304,27 @@ public class TimelineManager : MonoBehaviour
         else if (playerReactNumber == 1)
         {
             print("Should Yeeee");
+        }
+    }
+
+    private void UpdateKey()
+    {
+        isHahaPressed = Input.GetKey(KeyCode.Space);
+        isYeePressed = Input.GetKey(KeyCode.Y);
+
+        if (isStudentAk) return;
+
+        if (isHahaPressed)
+        {
+            studentAnimator.Play("student_haha");
+        }
+        else if (isYeePressed)
+        {
+            studentAnimator.Play("student_yee");
+        }
+        else
+        {
+            studentAnimator.Play("student_Idle");
         }
     }
 }
