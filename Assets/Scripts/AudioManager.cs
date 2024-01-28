@@ -63,4 +63,8 @@ public class AudioManager : MonoBehaviour
         Debug.Log("Playing: " + names[random]);
     }
 
+    public void PauseSound() {
+        audioSource.Pause();
+    }
+
 }
