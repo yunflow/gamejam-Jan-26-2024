@@ -373,6 +373,7 @@ public class TimelineManager : MonoBehaviour
                 print("animation: Professor Up");
                 talkingVFX.Stop();
                 audioManager.PauseTutorSpeech();
+                audioManager.PlaySound("Cough");
                 professorAnimator.Play("Tutor_speak_drink");
                 break;
             case Action.Drink:

@@ -6531,6 +6531,8 @@ MonoBehaviour:
     audio: {fileID: 8300000, guid: 0e59b4056cdb342e2acc50f6f88419c2, type: 3}
   - name: Speech
     audio: {fileID: 8300000, guid: bb2314c99e81d4928bd5537a8d6d3b7e, type: 3}
+  - name: Cough
+    audio: {fileID: 8300000, guid: 8b3d9e74b419349db912d986f3be82a7, type: 3}
 --- !u!82 &952400438
 AudioSource:
   m_ObjectHideFlags: 0
