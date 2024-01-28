@@ -1360,7 +1360,7 @@ GameObject:
   - component: {fileID: 2010744997}
   - component: {fileID: 2010744996}
   m_Layer: 5
-  m_Name: Finish Text
+  m_Name: Lose Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1380,10 +1380,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1655329950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1278, y: -378}
-  m_SizeDelta: {x: 973, y: 340}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -696.6316, y: -391.8552}
+  m_SizeDelta: {x: 1393.2632, y: 783.7104}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2010744996
 MonoBehaviour:
@@ -1405,7 +1405,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ede47fb08bc1a473dbee81c8cb9ac3e8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0dd03d15d7d9f4affab03981af404bd3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
