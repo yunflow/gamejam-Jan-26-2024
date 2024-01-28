@@ -224,7 +224,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -353, y: -4}
+  m_AnchoredPosition: {x: 357, y: -41}
   m_SizeDelta: {x: 1104, y: 884}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &236593508
@@ -366,13 +366,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 971618073}
     m_Modifications:
+    - target: {fileID: 2901613335802924197, guid: 71c55d387111545c096270b71d08575e, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: edcc1e070d46c419fa2c5635d3bc7a25, type: 2}
     - target: {fileID: 5598606833598156327, guid: 71c55d387111545c096270b71d08575e, type: 3}
       propertyPath: m_Name
       value: Tutor Jamie
       objectReference: {fileID: 0}
     - target: {fileID: 5598606833598156327, guid: 71c55d387111545c096270b71d08575e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8604355271215781152, guid: 71c55d387111545c096270b71d08575e, type: 3}
       propertyPath: m_LocalScale.x
@@ -625,7 +629,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7707896017814526288, guid: 139c7233e15df40b280525f3e70d4b15, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7818363741411782020, guid: 139c7233e15df40b280525f3e70d4b15, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1378,7 +1382,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 584, y: -399}
+  m_AnchoredPosition: {x: 1278, y: -378}
   m_SizeDelta: {x: 973, y: 340}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2010744996

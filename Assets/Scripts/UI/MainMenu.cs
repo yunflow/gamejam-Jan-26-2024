@@ -8,13 +8,19 @@ namespace UI
         public void OnStartGame()
         {
             print("Start Game");
-            SceneManager.LoadScene(2);
+            SceneManager.LoadScene(1);
         }
 
         public void OnQuitGame()
         {
             print("Quit Game");
             Application.Quit();
+        }
+
+        public void OnBackMainMenu()
+        {
+            print("Back Menu");
+            SceneManager.LoadScene(0);
         }
     }
 }
