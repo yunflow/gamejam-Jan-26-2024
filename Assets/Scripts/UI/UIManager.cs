@@ -28,6 +28,7 @@ namespace UI
 
             if (Input.GetKeyDown(KeyCode.F)) {
                 ShowReactBubble();
+                FindObjectOfType<AudioManager>().PlaySound("Click");
             }
         }
 
@@ -44,7 +45,7 @@ namespace UI
             
         }
 
-        private void ShowReactBubble() {
+        public void ShowReactBubble() {
             if (tlm.playerReactNumber == 0) {
                 thirdBubble.sprite = hahaReactBubble;
             } else {
