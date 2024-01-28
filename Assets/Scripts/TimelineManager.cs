@@ -1,4 +1,5 @@
 using System.Collections;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -21,12 +22,15 @@ public class TimelineManager : MonoBehaviour
     [SerializeField] private GameObject yKeyIntro;
 
     // public interface
-    [Header("public debug")] public float points;
+    [Header("public debug")] 
+    public float points;
     public int playerReactNumber; // 0-Hahaha, 1-yeeeaa
     public bool isHahaPressed;
     public bool isYeePressed;
 
     // private
+    private UIManager uiManager;
+    private AudioManager audioManager;
     private int currentSetIndex;
     private bool inSetProcess;
     private bool isOneLevelOver;
@@ -39,6 +43,12 @@ public class TimelineManager : MonoBehaviour
     private bool inFirstTutorialSet;
     private bool inSecondTutorialSet;
 
+
+    private void Awake()
+    {
+        uiManager = FindObjectOfType<UIManager>();
+        audioManager = FindObjectOfType<AudioManager>();
+    }
 
     private void Start()
     {
@@ -53,7 +63,11 @@ public class TimelineManager : MonoBehaviour
         UpdateKey();
         DetectDeath();
 
-        if (inSetProcess || isOneLevelOver) return;
+        if (inSetProcess) return;
+        if (isOneLevelOver)
+        {
+            SceneManager.LoadScene(3);
+        }
 
         currentSetIndex++;
         if (currentSetIndex > actionSets.Length - 1)
@@ -87,6 +101,7 @@ public class TimelineManager : MonoBehaviour
             if ((Action)action.x == Action.Idle)
             {
                 PerformAction(Action.Idle);
+                uiManager.ShowReactBubble();
 
                 if (inFirstTutorialSet)
                 {
@@ -345,31 +360,37 @@ public class TimelineManager : MonoBehaviour
             case Action.Idle:
                 print("animation: Professor Idle");
                 talkingVFX.Stop();
+                audioManager.PauseSound();
                 professorAnimator.Play("Tutor_Idle");
                 break;
             case Action.Speak:
                 print("animation: Professor Speak");
                 talkingVFX.Play();
+                audioManager.PlaySound("Speech");
                 professorAnimator.Play("Tutor_Idle_speak");
                 break;
             case Action.Up:
                 print("animation: Professor Up");
                 talkingVFX.Stop();
+                audioManager.PauseSound();
                 professorAnimator.Play("Tutor_speak_drink");
                 break;
             case Action.Drink:
                 print("animation: Professor Drink");
                 talkingVFX.Stop();
+                audioManager.PauseSound();
                 professorAnimator.Play("Tutor_drink");
                 break;
             case Action.Down:
                 print("animation: Professor Down");
                 talkingVFX.Stop();
+                audioManager.PauseSound();
                 professorAnimator.Play("Tutor_drink_idle");
                 break;
             case Action.Angry:
                 print("animation: Professor Angry");
                 talkingVFX.Stop();
+                audioManager.PauseSound();
                 professorAnimator.speed = 0.5f;
                 studentAnimator.speed = 0.5f;
                 isStudentAk = true;
@@ -383,7 +404,7 @@ public class TimelineManager : MonoBehaviour
     {
         // Set Random React number [0, 1]
         playerReactNumber = Random.Range(0, 2);
-        
+
         // Check if in tutorial sets
         switch (currentSetIndex)
         {
