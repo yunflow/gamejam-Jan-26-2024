@@ -17,7 +17,7 @@ namespace UI
 
         private TimelineManager tlm;
 
-        private void Start()
+        private void Awake()
         {
             tlm = FindObjectOfType<TimelineManager>();
         }
