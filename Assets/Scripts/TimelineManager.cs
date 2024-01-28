@@ -360,37 +360,37 @@ public class TimelineManager : MonoBehaviour
             case Action.Idle:
                 print("animation: Professor Idle");
                 talkingVFX.Stop();
-                audioManager.PauseSound();
+                audioManager.PauseTutorSpeech();
                 professorAnimator.Play("Tutor_Idle");
                 break;
             case Action.Speak:
                 print("animation: Professor Speak");
                 talkingVFX.Play();
-                audioManager.PlaySound("Speech");
+                audioManager.PlayTutorSpeech();
                 professorAnimator.Play("Tutor_Idle_speak");
                 break;
             case Action.Up:
                 print("animation: Professor Up");
                 talkingVFX.Stop();
-                audioManager.PauseSound();
+                audioManager.PauseTutorSpeech();
                 professorAnimator.Play("Tutor_speak_drink");
                 break;
             case Action.Drink:
                 print("animation: Professor Drink");
                 talkingVFX.Stop();
-                audioManager.PauseSound();
+                audioManager.PauseTutorSpeech();
                 professorAnimator.Play("Tutor_drink");
                 break;
             case Action.Down:
                 print("animation: Professor Down");
                 talkingVFX.Stop();
-                audioManager.PauseSound();
+                audioManager.PauseTutorSpeech();
                 professorAnimator.Play("Tutor_drink_idle");
                 break;
             case Action.Angry:
                 print("animation: Professor Angry");
                 talkingVFX.Stop();
-                audioManager.PauseSound();
+                audioManager.PauseTutorSpeech();
                 professorAnimator.speed = 0.5f;
                 studentAnimator.speed = 0.5f;
                 isStudentAk = true;

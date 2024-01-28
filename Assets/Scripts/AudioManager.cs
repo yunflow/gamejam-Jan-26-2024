@@ -13,6 +13,8 @@ public class AudioDict
 
 public class AudioManager : MonoBehaviour
 {
+    public AudioSource tutorSpeech;
+
     private AudioSource audioSource;
 
     public AudioDict[] audioDicts;
@@ -65,6 +67,13 @@ public class AudioManager : MonoBehaviour
 
     public void PauseSound() {
         audioSource.Pause();
+    }
+
+    public void PlayTutorSpeech() {
+        tutorSpeech.Play();
+    }
+    public void PauseTutorSpeech() {
+        tutorSpeech.Pause();
     }
 
 }
