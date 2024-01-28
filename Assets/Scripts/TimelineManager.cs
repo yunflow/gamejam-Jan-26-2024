@@ -131,9 +131,13 @@ public class TimelineManager : MonoBehaviour
                         if (inFirstTutorialSet || inSecondTutorialSet)
                         {
                             failIntro.SetActive(true);
+                            yield return new WaitForSeconds(4f);
                         }
-
-                        yield return new WaitForSeconds(2f);
+                        else
+                        {
+                            yield return new WaitForSeconds(2f);
+                        }
+                        
                         isStudentAk = false;
 
                         print("**** Finish One Set But Fail ****");
@@ -179,9 +183,13 @@ public class TimelineManager : MonoBehaviour
                                 if (inFirstTutorialSet || inSecondTutorialSet)
                                 {
                                     failIntro.SetActive(true);
+                                    yield return new WaitForSeconds(4f);
                                 }
-
-                                yield return new WaitForSeconds(2f);
+                                else
+                                {
+                                    yield return new WaitForSeconds(2f);
+                                }
+                                
                                 isStudentAk = false;
 
                                 print("**** Finish One Set But Fail ****");
@@ -208,9 +216,13 @@ public class TimelineManager : MonoBehaviour
                                 if (inFirstTutorialSet || inSecondTutorialSet)
                                 {
                                     failIntro.SetActive(true);
+                                    yield return new WaitForSeconds(4f);
                                 }
-
-                                yield return new WaitForSeconds(2f);
+                                else
+                                {
+                                    yield return new WaitForSeconds(2f);
+                                }
+                                
                                 isStudentAk = false;
 
                                 print("**** Finish One Set But Fail ****");
@@ -243,7 +255,7 @@ public class TimelineManager : MonoBehaviour
                         {
                             if (!Input.GetKey(KeyCode.Space))
                             {
-                                yield return new WaitForSeconds(action.y); // 继续播放Drink动画
+                                //yield return new WaitForSeconds(action.y); // 继续播放Drink动画
                                 isSpacePressedDuringUp = false;
 
                                 points--;
@@ -253,9 +265,13 @@ public class TimelineManager : MonoBehaviour
                                 if (inFirstTutorialSet || inSecondTutorialSet)
                                 {
                                     failIntro.SetActive(true);
+                                    yield return new WaitForSeconds(4f);
                                 }
-
-                                yield return new WaitForSeconds(2f);
+                                else
+                                {
+                                    yield return new WaitForSeconds(2f);
+                                }
+                                
                                 isStudentAk = false;
 
                                 print("**** Finish One Set But Fail ****");
@@ -281,9 +297,13 @@ public class TimelineManager : MonoBehaviour
                                 if (inFirstTutorialSet || inSecondTutorialSet)
                                 {
                                     failIntro.SetActive(true);
+                                    yield return new WaitForSeconds(4f);
+                                }
+                                else
+                                {
+                                    yield return new WaitForSeconds(2f);
                                 }
 
-                                yield return new WaitForSeconds(2f);
                                 isStudentAk = false;
 
                                 print("**** Finish One Set But Fail ****");
@@ -323,6 +343,7 @@ public class TimelineManager : MonoBehaviour
 
                                 if (inFirstTutorialSet)
                                 {
+                                    releaseIntro.SetActive(false);
                                     successIntro.SetActive(true);
                                 }
                             }
@@ -338,6 +359,12 @@ public class TimelineManager : MonoBehaviour
                                 // Successful action
                                 Debug.Log("**** Professor Not Angry ****");
                                 isSpacePressedDuringUp = false; // Reset the flag
+                                
+                                if (inSecondTutorialSet)
+                                {
+                                    releaseIntro.SetActive(false);
+                                    successIntro.SetActive(true);
+                                }
                             }
 
                             downTime += Time.deltaTime;
@@ -392,8 +419,17 @@ public class TimelineManager : MonoBehaviour
                 print("animation: Professor Angry");
                 talkingVFX.Stop();
                 audioManager.PauseTutorSpeech();
-                professorAnimator.speed = 0.5f;
-                studentAnimator.speed = 0.5f;
+                CloseAllTutorial();
+                if (inFirstTutorialSet || inSecondTutorialSet)
+                {
+                    professorAnimator.speed = 0.25f;
+                    studentAnimator.speed = 0.25f;
+                }
+                else
+                {
+                    professorAnimator.speed = 0.5f;
+                    studentAnimator.speed = 0.5f;
+                }
                 isStudentAk = true;
                 professorAnimator.Play("Tutor_angry");
                 studentAnimator.Play("student_ak");
