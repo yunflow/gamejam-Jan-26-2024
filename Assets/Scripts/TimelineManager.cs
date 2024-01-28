@@ -101,18 +101,38 @@ public class TimelineManager : MonoBehaviour
             if ((Action)action.x == Action.Idle)
             {
                 PerformAction(Action.Idle);
-                uiManager.ShowReactBubble();
 
                 if (inFirstTutorialSet)
                 {
                     backgroundIntro.SetActive(true);
                 }
 
-                yield return new WaitForSeconds(action.y);
+                float idleTime = 0;
+                while (idleTime < action.y)
+                {
+                    if (!inFirstTutorialSet && !inSecondTutorialSet && (isHahaPressed || isYeePressed))
+                    {
+                        points--;
+                        print("the professor is angry! point: " + points);
+
+                        PerformAction(Action.Angry);
+
+                        yield return new WaitForSeconds(2f);
+                        isStudentAk = false;
+
+                        print("**** Finish One Set But Fail ****");
+                        inSetProcess = false;
+                        yield break;
+                    }
+
+                    idleTime += Time.deltaTime;
+                    yield return null;
+                }
             }
             else if ((Action)action.x == Action.Speak)
             {
                 PerformAction(Action.Speak);
+                uiManager.ShowReactBubble();
 
                 if (inFirstTutorialSet)
                 {
@@ -137,7 +157,7 @@ public class TimelineManager : MonoBehaviour
                         {
                             yield return new WaitForSeconds(2f);
                         }
-                        
+
                         isStudentAk = false;
 
                         print("**** Finish One Set But Fail ****");
@@ -189,7 +209,7 @@ public class TimelineManager : MonoBehaviour
                                 {
                                     yield return new WaitForSeconds(2f);
                                 }
-                                
+
                                 isStudentAk = false;
 
                                 print("**** Finish One Set But Fail ****");
@@ -222,7 +242,7 @@ public class TimelineManager : MonoBehaviour
                                 {
                                     yield return new WaitForSeconds(2f);
                                 }
-                                
+
                                 isStudentAk = false;
 
                                 print("**** Finish One Set But Fail ****");
@@ -271,7 +291,7 @@ public class TimelineManager : MonoBehaviour
                                 {
                                     yield return new WaitForSeconds(2f);
                                 }
-                                
+
                                 isStudentAk = false;
 
                                 print("**** Finish One Set But Fail ****");
@@ -323,7 +343,7 @@ public class TimelineManager : MonoBehaviour
                 professorAnimator.speed = 1.0f / action.y;
                 PerformAction(Action.Down);
 
-                if (inFirstTutorialSet)
+                if (inFirstTutorialSet || inSecondTutorialSet)
                 {
                     releaseIntro.SetActive(true);
                 }
@@ -359,7 +379,7 @@ public class TimelineManager : MonoBehaviour
                                 // Successful action
                                 Debug.Log("**** Professor Not Angry ****");
                                 isSpacePressedDuringUp = false; // Reset the flag
-                                
+
                                 if (inSecondTutorialSet)
                                 {
                                     releaseIntro.SetActive(false);
@@ -430,6 +450,7 @@ public class TimelineManager : MonoBehaviour
                     professorAnimator.speed = 0.5f;
                     studentAnimator.speed = 0.5f;
                 }
+
                 isStudentAk = true;
                 professorAnimator.Play("Tutor_angry");
                 studentAnimator.Play("student_ak");
