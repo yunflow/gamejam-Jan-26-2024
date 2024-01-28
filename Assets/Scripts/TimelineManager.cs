@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class TimelineManager : MonoBehaviour
@@ -9,13 +10,14 @@ public class TimelineManager : MonoBehaviour
     [SerializeField] private Animator studentAnimator;
     [SerializeField] private ParticleSystem talkingVFX;
 
-    [Header("Tutorial GameObjects")] 
-    [SerializeField] private GameObject backgroundIntro;
+    [Header("Tutorial GameObjects")] [SerializeField]
+    private GameObject backgroundIntro;
+
     [SerializeField] private GameObject ruleIntro;
     [SerializeField] private GameObject spaceKeyIntro;
     [SerializeField] private GameObject holdPressIntro; // drink
     [SerializeField] private GameObject releaseIntro; // 放下杯子
-    
+
     [SerializeField] private GameObject successIntro;
     [SerializeField] private GameObject failIntro;
 
@@ -34,10 +36,17 @@ public class TimelineManager : MonoBehaviour
     private bool isOneLevelOver;
     private bool isSpacePressedDuringUp;
     private bool isStudentAk;
+    private bool isInHahaAnimation;
+    private bool isInYeeAnimation;
+
+    // tutorial bool
+    private bool inFirstTutorialSet;
+    private bool inSecondTutorialSet;
 
 
     private void Start()
     {
+        CloseAllTutorial();
         currentSetIndex = 0;
         points = 3;
         StartCoroutine(PerformActionSet(actionSets[currentSetIndex]));
@@ -46,6 +55,7 @@ public class TimelineManager : MonoBehaviour
     private void Update()
     {
         UpdateKey();
+        DetectDeath();
 
         if (inSetProcess || isOneLevelOver) return;
 
@@ -69,17 +79,55 @@ public class TimelineManager : MonoBehaviour
 
         SetRandomReactNumber();
 
+        // Check if in tutorial sets
+        switch (currentSetIndex)
+        {
+            case 0:
+                playerReactNumber = 0;
+                inFirstTutorialSet = true;
+                inSecondTutorialSet = false;
+                break;
+            case 1:
+                playerReactNumber = 1;
+                inFirstTutorialSet = false;
+                inSecondTutorialSet = true;
+                break;
+            default:
+                inFirstTutorialSet = false;
+                inSecondTutorialSet = false;
+                break;
+        }
+
         Vector2[] actions = actionSet.actions;
 
         foreach (Vector2 action in actions)
         {
-            professorAnimator.speed = 1; // Reset the Animator speed every action
+            // Reset the Animator speed every action
+            professorAnimator.speed = 1;
             studentAnimator.speed = 1;
+            CloseAllTutorial();
 
-            if ((Action)action.x == Action.Speak)
+            if ((Action)action.x == Action.Idle)
+            {
+                talkingVFX.Stop();
+                PerformTutorAction((Action)action.x);
+
+                if (inFirstTutorialSet)
+                {
+                    backgroundIntro.SetActive(true);
+                }
+
+                yield return new WaitForSeconds(action.y);
+            }
+            else if ((Action)action.x == Action.Speak)
             {
                 PerformTutorAction(Action.Speak);
                 talkingVFX.Play();
+
+                if (inFirstTutorialSet)
+                {
+                    ruleIntro.SetActive(true);
+                }
 
                 float speakTime = 0;
                 while (speakTime < action.y)
@@ -90,6 +138,11 @@ public class TimelineManager : MonoBehaviour
                         print("the professor is angry! point: " + points);
 
                         PerformTutorAction(Action.Angry);
+                        if (inFirstTutorialSet || inSecondTutorialSet)
+                        {
+                            failIntro.SetActive(true);
+                        }
+
                         yield return new WaitForSeconds(2f);
                         isStudentAk = false;
 
@@ -108,6 +161,15 @@ public class TimelineManager : MonoBehaviour
                 PerformTutorAction(Action.Up);
                 talkingVFX.Stop();
 
+                if (inFirstTutorialSet)
+                {
+                    spaceKeyIntro.SetActive(true);
+                }
+                else if (inSecondTutorialSet)
+                {
+                    yKeyIntro.SetActive(true);
+                }
+
                 float upTime = 0;
                 while (upTime < action.y)
                 {
@@ -125,6 +187,11 @@ public class TimelineManager : MonoBehaviour
                                 print("the professor is angry! point: " + points);
 
                                 PerformTutorAction(Action.Angry);
+                                if (inFirstTutorialSet || inSecondTutorialSet)
+                                {
+                                    failIntro.SetActive(true);
+                                }
+
                                 yield return new WaitForSeconds(2f);
                                 isStudentAk = false;
 
@@ -149,6 +216,11 @@ public class TimelineManager : MonoBehaviour
                                 print("the professor is angry! point: " + points);
 
                                 PerformTutorAction(Action.Angry);
+                                if (inFirstTutorialSet || inSecondTutorialSet)
+                                {
+                                    failIntro.SetActive(true);
+                                }
+
                                 yield return new WaitForSeconds(2f);
                                 isStudentAk = false;
 
@@ -169,6 +241,11 @@ public class TimelineManager : MonoBehaviour
                 PerformTutorAction(Action.Drink);
                 talkingVFX.Stop();
 
+                if (inFirstTutorialSet || inSecondTutorialSet)
+                {
+                    holdPressIntro.SetActive(true);
+                }
+
                 float drinkTime = 0;
                 while (drinkTime < action.y)
                 {
@@ -185,6 +262,11 @@ public class TimelineManager : MonoBehaviour
                                 print("the professor is angry! point: " + points);
 
                                 PerformTutorAction(Action.Angry);
+                                if (inFirstTutorialSet || inSecondTutorialSet)
+                                {
+                                    failIntro.SetActive(true);
+                                }
+
                                 yield return new WaitForSeconds(2f);
                                 isStudentAk = false;
 
@@ -208,6 +290,11 @@ public class TimelineManager : MonoBehaviour
                                 print("the professor is angry! point: " + points);
 
                                 PerformTutorAction(Action.Angry);
+                                if (inFirstTutorialSet || inSecondTutorialSet)
+                                {
+                                    failIntro.SetActive(true);
+                                }
+
                                 yield return new WaitForSeconds(2f);
                                 isStudentAk = false;
 
@@ -229,6 +316,11 @@ public class TimelineManager : MonoBehaviour
                 PerformTutorAction(Action.Down);
                 talkingVFX.Stop();
 
+                if (inFirstTutorialSet)
+                {
+                    releaseIntro.SetActive(true);
+                }
+
                 float downTime = 0;
                 while (downTime < action.y)
                 {
@@ -241,6 +333,11 @@ public class TimelineManager : MonoBehaviour
                                 // Successful action
                                 Debug.Log("**** Professor Not Angry ****");
                                 isSpacePressedDuringUp = false; // Reset the flag
+
+                                if (inFirstTutorialSet)
+                                {
+                                    successIntro.SetActive(true);
+                                }
                             }
 
                             downTime += Time.deltaTime;
@@ -262,12 +359,6 @@ public class TimelineManager : MonoBehaviour
                             break;
                     }
                 }
-            }
-            else
-            {
-                talkingVFX.Stop();
-                PerformTutorAction((Action)action.x);
-                yield return new WaitForSeconds(action.y);
             }
         }
 
@@ -316,13 +407,14 @@ public class TimelineManager : MonoBehaviour
         // Set Random React number [0, 1]
         playerReactNumber = Random.Range(0, 2);
 
-        if (playerReactNumber == 0)
+        switch (playerReactNumber)
         {
-            print("Should Hahahah");
-        }
-        else if (playerReactNumber == 1)
-        {
-            print("Should Yeeee");
+            case 0:
+                print("Should Hahahah");
+                break;
+            case 1:
+                print("Should Yeeee");
+                break;
         }
     }
 
@@ -333,17 +425,41 @@ public class TimelineManager : MonoBehaviour
 
         if (isStudentAk) return;
 
-        if (isHahaPressed)
+        if (isHahaPressed && !isInHahaAnimation)
         {
             studentAnimator.Play("student_haha");
+            isInHahaAnimation = true;
         }
-        else if (isYeePressed)
+        else if (isYeePressed && !isInYeeAnimation)
         {
             studentAnimator.Play("student_yee");
+            isInYeeAnimation = true;
         }
-        else
+        else if (!isHahaPressed && !isYeePressed)
         {
             studentAnimator.Play("student_Idle");
+            isInHahaAnimation = false;
+            isInYeeAnimation = false;
+        }
+    }
+
+    private void CloseAllTutorial()
+    {
+        backgroundIntro.SetActive(false);
+        ruleIntro.SetActive(false);
+        spaceKeyIntro.SetActive(false);
+        holdPressIntro.SetActive(false);
+        releaseIntro.SetActive(false);
+        successIntro.SetActive(false);
+        failIntro.SetActive(false);
+        yKeyIntro.SetActive(false);
+    }
+
+    private void DetectDeath()
+    {
+        if (points <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
