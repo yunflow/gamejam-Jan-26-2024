@@ -446,11 +446,13 @@ public class TimelineManager : MonoBehaviour
         if (isHahaPressed && !isInHahaAnimation)
         {
             studentAnimator.Play("student_haha");
+            audioManager.PlaySound("Hehe");
             isInHahaAnimation = true;
         }
         else if (isYeePressed && !isInYeeAnimation)
         {
             studentAnimator.Play("student_yee");
+            audioManager.PlaySound("Yea");
             isInYeeAnimation = true;
         }
         else if (!isHahaPressed && !isYeePressed)

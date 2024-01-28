@@ -6533,6 +6533,10 @@ MonoBehaviour:
     audio: {fileID: 8300000, guid: bb2314c99e81d4928bd5537a8d6d3b7e, type: 3}
   - name: Cough
     audio: {fileID: 8300000, guid: 8b3d9e74b419349db912d986f3be82a7, type: 3}
+  - name: Hehe
+    audio: {fileID: 8300000, guid: 66f043cdeea1d414189cdf08b82a6914, type: 3}
+  - name: Yea
+    audio: {fileID: 8300000, guid: c7774d8e90f42416887b96d149c139ca, type: 3}
 --- !u!82 &952400438
 AudioSource:
   m_ObjectHideFlags: 0
