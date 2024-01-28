@@ -10,17 +10,14 @@ public class TimelineManager : MonoBehaviour
     [SerializeField] private Animator studentAnimator;
     [SerializeField] private ParticleSystem talkingVFX;
 
-    [Header("Tutorial GameObjects")] [SerializeField]
-    private GameObject backgroundIntro;
-
+    [Header("Tutorial GameObjects")] 
+    [SerializeField] private GameObject backgroundIntro;
     [SerializeField] private GameObject ruleIntro;
     [SerializeField] private GameObject spaceKeyIntro;
     [SerializeField] private GameObject holdPressIntro; // drink
     [SerializeField] private GameObject releaseIntro; // 放下杯子
-
     [SerializeField] private GameObject successIntro;
     [SerializeField] private GameObject failIntro;
-
     [SerializeField] private GameObject yKeyIntro;
 
     // public interface
@@ -31,7 +28,6 @@ public class TimelineManager : MonoBehaviour
 
     // private
     private int currentSetIndex;
-
     private bool inSetProcess;
     private bool isOneLevelOver;
     private bool isSpacePressedDuringUp;
@@ -39,16 +35,16 @@ public class TimelineManager : MonoBehaviour
     private bool isInHahaAnimation;
     private bool isInYeeAnimation;
 
-    // tutorial bool
+    // tutorial bools
     private bool inFirstTutorialSet;
     private bool inSecondTutorialSet;
 
 
     private void Start()
     {
-        CloseAllTutorial();
         currentSetIndex = 0;
         points = 3;
+        CloseAllTutorial();
         StartCoroutine(PerformActionSet(actionSets[currentSetIndex]));
     }
 
@@ -63,7 +59,7 @@ public class TimelineManager : MonoBehaviour
         if (currentSetIndex > actionSets.Length - 1)
         {
             print("**** All Sets finish ****");
-            PerformTutorAction(Action.Idle);
+            PerformAction(Action.Idle);
             isOneLevelOver = true;
             return;
         }
@@ -79,25 +75,6 @@ public class TimelineManager : MonoBehaviour
 
         SetRandomReactNumber();
 
-        // Check if in tutorial sets
-        switch (currentSetIndex)
-        {
-            case 0:
-                playerReactNumber = 0;
-                inFirstTutorialSet = true;
-                inSecondTutorialSet = false;
-                break;
-            case 1:
-                playerReactNumber = 1;
-                inFirstTutorialSet = false;
-                inSecondTutorialSet = true;
-                break;
-            default:
-                inFirstTutorialSet = false;
-                inSecondTutorialSet = false;
-                break;
-        }
-
         Vector2[] actions = actionSet.actions;
 
         foreach (Vector2 action in actions)
@@ -109,8 +86,7 @@ public class TimelineManager : MonoBehaviour
 
             if ((Action)action.x == Action.Idle)
             {
-                talkingVFX.Stop();
-                PerformTutorAction((Action)action.x);
+                PerformAction(Action.Idle);
 
                 if (inFirstTutorialSet)
                 {
@@ -121,8 +97,7 @@ public class TimelineManager : MonoBehaviour
             }
             else if ((Action)action.x == Action.Speak)
             {
-                PerformTutorAction(Action.Speak);
-                talkingVFX.Play();
+                PerformAction(Action.Speak);
 
                 if (inFirstTutorialSet)
                 {
@@ -137,7 +112,7 @@ public class TimelineManager : MonoBehaviour
                         points--;
                         print("the professor is angry! point: " + points);
 
-                        PerformTutorAction(Action.Angry);
+                        PerformAction(Action.Angry);
                         if (inFirstTutorialSet || inSecondTutorialSet)
                         {
                             failIntro.SetActive(true);
@@ -158,8 +133,7 @@ public class TimelineManager : MonoBehaviour
             else if ((Action)action.x == Action.Up)
             {
                 professorAnimator.speed = 1.0f / action.y;
-                PerformTutorAction(Action.Up);
-                talkingVFX.Stop();
+                PerformAction(Action.Up);
 
                 if (inFirstTutorialSet)
                 {
@@ -186,7 +160,7 @@ public class TimelineManager : MonoBehaviour
                                 points--;
                                 print("the professor is angry! point: " + points);
 
-                                PerformTutorAction(Action.Angry);
+                                PerformAction(Action.Angry);
                                 if (inFirstTutorialSet || inSecondTutorialSet)
                                 {
                                     failIntro.SetActive(true);
@@ -215,7 +189,7 @@ public class TimelineManager : MonoBehaviour
                                 points--;
                                 print("the professor is angry! point: " + points);
 
-                                PerformTutorAction(Action.Angry);
+                                PerformAction(Action.Angry);
                                 if (inFirstTutorialSet || inSecondTutorialSet)
                                 {
                                     failIntro.SetActive(true);
@@ -238,8 +212,7 @@ public class TimelineManager : MonoBehaviour
             }
             else if ((Action)action.x == Action.Drink)
             {
-                PerformTutorAction(Action.Drink);
-                talkingVFX.Stop();
+                PerformAction(Action.Drink);
 
                 if (inFirstTutorialSet || inSecondTutorialSet)
                 {
@@ -261,7 +234,7 @@ public class TimelineManager : MonoBehaviour
                                 points--;
                                 print("the professor is angry! point: " + points);
 
-                                PerformTutorAction(Action.Angry);
+                                PerformAction(Action.Angry);
                                 if (inFirstTutorialSet || inSecondTutorialSet)
                                 {
                                     failIntro.SetActive(true);
@@ -289,7 +262,7 @@ public class TimelineManager : MonoBehaviour
                                 points--;
                                 print("the professor is angry! point: " + points);
 
-                                PerformTutorAction(Action.Angry);
+                                PerformAction(Action.Angry);
                                 if (inFirstTutorialSet || inSecondTutorialSet)
                                 {
                                     failIntro.SetActive(true);
@@ -313,8 +286,7 @@ public class TimelineManager : MonoBehaviour
             else if ((Action)action.x == Action.Down)
             {
                 professorAnimator.speed = 1.0f / action.y;
-                PerformTutorAction(Action.Down);
-                talkingVFX.Stop();
+                PerformAction(Action.Down);
 
                 if (inFirstTutorialSet)
                 {
@@ -366,37 +338,42 @@ public class TimelineManager : MonoBehaviour
         inSetProcess = false;
     }
 
-    private void PerformTutorAction(Action action)
+    private void PerformAction(Action action)
     {
         switch (action)
         {
             case Action.Idle:
                 print("animation: Professor Idle");
+                talkingVFX.Stop();
                 professorAnimator.Play("Tutor_Idle");
                 break;
             case Action.Speak:
                 print("animation: Professor Speak");
+                talkingVFX.Play();
                 professorAnimator.Play("Tutor_Idle_speak");
                 break;
             case Action.Up:
                 print("animation: Professor Up");
+                talkingVFX.Stop();
                 professorAnimator.Play("Tutor_speak_drink");
                 break;
             case Action.Drink:
                 print("animation: Professor Drink");
+                talkingVFX.Stop();
                 professorAnimator.Play("Tutor_drink");
                 break;
             case Action.Down:
                 print("animation: Professor Down");
+                talkingVFX.Stop();
                 professorAnimator.Play("Tutor_drink_idle");
                 break;
             case Action.Angry:
                 print("animation: Professor Angry");
+                talkingVFX.Stop();
                 professorAnimator.speed = 0.5f;
                 studentAnimator.speed = 0.5f;
                 isStudentAk = true;
                 professorAnimator.Play("Tutor_angry");
-                talkingVFX.Stop();
                 studentAnimator.Play("student_ak");
                 break;
         }
@@ -406,6 +383,25 @@ public class TimelineManager : MonoBehaviour
     {
         // Set Random React number [0, 1]
         playerReactNumber = Random.Range(0, 2);
+        
+        // Check if in tutorial sets
+        switch (currentSetIndex)
+        {
+            case 0:
+                playerReactNumber = 0;
+                inFirstTutorialSet = true;
+                inSecondTutorialSet = false;
+                break;
+            case 1:
+                playerReactNumber = 1;
+                inFirstTutorialSet = false;
+                inSecondTutorialSet = true;
+                break;
+            default:
+                inFirstTutorialSet = false;
+                inSecondTutorialSet = false;
+                break;
+        }
 
         switch (playerReactNumber)
         {
@@ -459,7 +455,7 @@ public class TimelineManager : MonoBehaviour
     {
         if (points <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(0);
         }
     }
 }
