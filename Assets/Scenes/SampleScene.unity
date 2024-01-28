@@ -6713,7 +6713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7825,14 +7825,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -436823372, guid: b10a33ed5c4a14559bf47f237a240a4a, type: 3}
+  m_Sprite: {fileID: -243048823, guid: 48fa97f25d2a14bc8929fd0963820cce, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8040,8 +8040,8 @@ MonoBehaviour:
   progressBar: {fileID: 578456976}
   bubbleAni: {fileID: 1150375583}
   thirdBubble: {fileID: 1733632620}
-  hahaReactBubble: {fileID: -436823372, guid: b10a33ed5c4a14559bf47f237a240a4a, type: 3}
-  yeaReactBubble: {fileID: -436823372, guid: b10a33ed5c4a14559bf47f237a240a4a, type: 3}
+  hahaReactBubble: {fileID: -243048823, guid: 48fa97f25d2a14bc8929fd0963820cce, type: 3}
+  yeaReactBubble: {fileID: -323373411, guid: caefa48d4d79c4708a8c9ce405d16ee0, type: 3}
 --- !u!1 &1918904414
 GameObject:
   m_ObjectHideFlags: 0
@@ -8167,7 +8167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
